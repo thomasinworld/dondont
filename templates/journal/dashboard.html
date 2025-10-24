@@ -56,7 +56,7 @@
 {% block content %}
 <!-- GitHub-Style Contribution Graph -->
 <div class="bg-white rounded-lg shadow-md p-8">
-    <h2 class="text-xl font-semibold text-gray-800 mb-2 lowercase">2025</h2>
+    <h2 class="text-xl font-semibold text-gray-800 mb-2 lowercase"><span id="current-year"></span></h2>
     
     <div id="contribution-graph-container">
         <div id="contribution-graph">
@@ -85,8 +85,11 @@ function generateContributionGraph() {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Reset to start of day
     
-    // Start from January 1, 2025
-    const startDate = new Date('2025-01-01');
+    // Update year display
+    document.getElementById('current-year').textContent = today.getFullYear();
+    
+    // Start from January 1 of current year
+    const startDate = new Date(today.getFullYear(), 0, 1);
     startDate.setHours(0, 0, 0, 0);
     
     // Adjust to start on the Sunday before or on Jan 1
