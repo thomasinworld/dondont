@@ -182,6 +182,15 @@ function getContributionColor(percentage, total) {
 
 // Generate graph on page load
 generateContributionGraph();
+
+// Scroll to show today (right side of the graph)
+const container = document.getElementById('contribution-graph-container');
+if (container) {
+    // Wait a bit for the graph to render, then scroll to the right
+    setTimeout(() => {
+        container.scrollLeft = container.scrollWidth - container.clientWidth;
+    }, 100);
+}
 </script>
 
 {% endblock %}
