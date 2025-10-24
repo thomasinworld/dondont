@@ -138,19 +138,24 @@ function generateContributionGraph() {
     
     html += '<div>';
     
-    // Month labels - show month name when it changes
+    // Month labels - show month name at the start of each month
     html += '<div class="month-labels">';
     let lastMonth = -1;
     weeks.forEach((week, weekIndex) => {
-        // Check the first day that's in the week (could be Sunday)
-        const firstDayOfMonth = week.find(day => day.date.getDate() === 1);
-        const currentMonth = week[0].date.getMonth();
+        // Check if any day in this week is the 1st of a month
+        const firstOfMonth = week.find(day => day.date.getDate() === 1);
         
-        if (firstDayOfMonth || (currentMonth !== lastMonth && weekIndex === 0)) {
+        if (firstOfMonth) {
+            const monthName = firstOfMonth.date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
+            html += `<div class="month-label">${monthName}</div>`;
+            lastMonth = firstOfMonth.date.getMonth();
+        } else if (weekIndex === 0 && week[0].date.getDate() <= 7) {
+            // First week - show the month name
             const monthName = week[0].date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
             html += `<div class="month-label">${monthName}</div>`;
-            lastMonth = currentMonth;
+            lastMonth = week[0].date.getMonth();
         } else {
+            // Empty placeholder
             html += `<div class="month-label" style="width: 23px;"></div>`;
         }
     });
