@@ -52,71 +52,73 @@
     </div>
 </div>
 
-<!-- Do's Section -->
-<div class="bg-white rounded-lg shadow-md p-6 mb-6">
-    <h2 class="text-2xl font-bold text-green-600 mb-4 flex items-center lowercase">
-        <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-        </svg>
-        to do
-    </h2>
-    <div class="space-y-3">
-        {% for item in entries_do %}
-        <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-            <input type="checkbox" 
-                   class="checkbox-custom w-6 h-6 text-green-600 rounded focus:ring-green-500 cursor-pointer"
-                   data-entry-id="{{ item.entry.id }}"
-                   {% if item.entry.completed %}checked{% endif %}
-                   onchange="toggleEntry(this)">
-            <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
-                {{ item.entry.get_display_text }}
-            </label>
-            <div class="flex items-center space-x-2">
-                {% if item.streak > 0 %}
-                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center"
-                      data-streak-id="{{ item.entry.id }}">
-                    🔥 {{ item.streak }} day{{ item.streak|pluralize }}
-                </span>
-                {% endif %}
+<div class="grid md:grid-cols-2 gap-8">
+    <!-- Do's Section -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-bold text-green-600 mb-4 flex items-center lowercase">
+            <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            to do
+        </h2>
+        <div class="space-y-3">
+            {% for item in entries_do %}
+            <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                <input type="checkbox" 
+                       class="checkbox-custom w-6 h-6 text-green-600 rounded focus:ring-green-500 cursor-pointer"
+                       data-entry-id="{{ item.entry.id }}"
+                       {% if item.entry.completed %}checked{% endif %}
+                       onchange="toggleEntry(this)">
+                <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
+                    {{ item.entry.get_display_text }}
+                </label>
+                <div class="flex items-center space-x-2">
+                    {% if item.streak > 0 %}
+                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center"
+                          data-streak-id="{{ item.entry.id }}">
+                        🔥 {{ item.streak }} day{{ item.streak|pluralize }}
+                    </span>
+                    {% endif %}
+                </div>
             </div>
+            {% empty %}
+            <p class="text-gray-500 text-center py-4 lowercase">no "do" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-green-600 hover:underline">add some!</a></p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p class="text-gray-500 text-center py-4 lowercase">no "do" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-green-600 hover:underline">add some!</a></p>
-        {% endfor %}
     </div>
-</div>
 
-<!-- Don'ts Section -->
-<div class="bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center lowercase">
-        <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
-        </svg>
-        to don't
-    </h2>
-    <div class="space-y-3">
-        {% for item in entries_dont %}
-        <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-            <input type="checkbox" 
-                   class="checkbox-custom w-6 h-6 text-red-600 rounded focus:ring-red-500 cursor-pointer"
-                   data-entry-id="{{ item.entry.id }}"
-                   {% if item.entry.completed %}checked{% endif %}
-                   onchange="toggleEntry(this)">
-            <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
-                {{ item.entry.get_display_text }}
-            </label>
-            <div class="flex items-center space-x-2">
-                {% if item.streak > 0 %}
-                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center"
-                      data-streak-id="{{ item.entry.id }}">
-                    🔥 {{ item.streak }} day{{ item.streak|pluralize }}
-                </span>
-                {% endif %}
+    <!-- Don'ts Section -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center lowercase">
+            <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
+            </svg>
+            to don't
+        </h2>
+        <div class="space-y-3">
+            {% for item in entries_dont %}
+            <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                <input type="checkbox" 
+                       class="checkbox-custom w-6 h-6 text-red-600 rounded focus:ring-red-500 cursor-pointer"
+                       data-entry-id="{{ item.entry.id }}"
+                       {% if item.entry.completed %}checked{% endif %}
+                       onchange="toggleEntry(this)">
+                <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
+                    {{ item.entry.get_display_text }}
+                </label>
+                <div class="flex items-center space-x-2">
+                    {% if item.streak > 0 %}
+                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center"
+                          data-streak-id="{{ item.entry.id }}">
+                        🔥 {{ item.streak }} day{{ item.streak|pluralize }}
+                    </span>
+                    {% endif %}
+                </div>
             </div>
+            {% empty %}
+            <p class="text-gray-500 text-center py-4 lowercase">no "don't" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-green-600 hover:underline">add some!</a></p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p class="text-gray-500 text-center py-4 lowercase">no "don't" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-green-600 hover:underline">add some!</a></p>
-        {% endfor %}
     </div>
 </div>
 
