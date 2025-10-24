@@ -146,7 +146,7 @@ function generateContributionGraph() {
     
     // Month labels - show month name at the start of each month
     html += '<div class="month-labels">';
-    let displayedMonths = new Set();
+    let lastLabeledMonth = -1;
     
     weeks.forEach((week, weekIndex) => {
         if (week.length === 0) {
@@ -154,16 +154,25 @@ function generateContributionGraph() {
             return;
         }
         
-        // Get the month of the week (use the first day or majority)
-        const weekMonth = week[0].date.getMonth();
-        const weekYear = week[0].date.getFullYear();
-        const monthKey = `${weekYear}-${weekMonth}`;
+        // Find the dominant month in this week (most days)
+        const monthCounts = {};
+        week.forEach(day => {
+            const monthKey = `${day.date.getFullYear()}-${day.date.getMonth()}`;
+            monthCounts[monthKey] = (monthCounts[monthKey] || 0) + 1;
+        });
         
-        // Show label if this is the first week we're showing this month
-        if (!displayedMonths.has(monthKey)) {
-            const monthName = week[0].date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
+        // Get month with most days
+        let dominantMonthKey = Object.keys(monthCounts).reduce((a, b) => 
+            monthCounts[a] > monthCounts[b] ? a : b
+        );
+        const [year, month] = dominantMonthKey.split('-').map(Number);
+        const dominantMonthInt = year * 12 + month;
+        
+        // Show label if this is a new month
+        if (dominantMonthInt !== lastLabeledMonth) {
+            const monthName = new Date(year, month, 1).toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
             html += `<div class="month-label">${monthName}</div>`;
-            displayedMonths.add(monthKey);
+            lastLabeledMonth = dominantMonthInt;
         } else {
             // Empty placeholder
             html += `<div class="month-label" style="width: 23px;"></div>`;
