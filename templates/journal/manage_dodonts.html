@@ -3,11 +3,6 @@
 {% block title %}manage habits - dondont{% endblock %}
 
 {% block content %}
-<div class="mb-8">
-    <h1 class="text-4xl font-bold text-gray-900 mb-2 lowercase">manage your habits</h1>
-    <p class="text-gray-600 lowercase">add, edit, or remove your daily dos and don'ts</p>
-</div>
-
 <div class="grid md:grid-cols-2 gap-8">
     <!-- Do's Section -->
     <div class="bg-white rounded-lg shadow-md p-6">
@@ -135,14 +130,9 @@ function addDoDont(itemType) {
     const input = document.getElementById(inputId);
     const text = input.value.trim();
     
-    if (!text) {
-        console.log('No text entered');
-        return;
-    }
+    if (!text) return;
     
-    console.log('Adding item:', text, 'Type:', itemType);
     const csrftoken = getCookie('csrftoken');
-    console.log('CSRF Token:', csrftoken);
     
     fetch("{% url 'journal:add_dodont' %}", {
         method: 'POST',
@@ -153,14 +143,12 @@ function addDoDont(itemType) {
         body: JSON.stringify({ text: text, item_type: itemType })
     })
     .then(response => {
-        console.log('Response status:', response.status);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         return response.json();
     })
     .then(data => {
-        console.log('Response data:', data);
         if (data.success) {
             // Clear input
             input.value = '';
@@ -200,15 +188,12 @@ function addDoDont(itemType) {
                 </div>
             `;
             list.appendChild(newItem);
-            console.log('Item added successfully');
         } else {
-            console.error('Server returned success: false', data);
             alert('Failed to add item: ' + (data.error || 'Unknown error'));
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to add item. Please check the console for details.');
+        alert('Failed to add item. Please try again.');
     });
 }
 
