@@ -59,8 +59,10 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {% block content %}{% endblock %}
+    <main class="w-full px-4 sm:px-6 lg:px-8 py-8 flex justify-center">
+        <div class="w-full max-w-[1600px]">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     {% block extra_scripts %}{% endblock %}
