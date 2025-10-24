@@ -71,17 +71,26 @@ def daily_journal(request, date_str=None):
     
     # Get or create entries for this date
     entries_data = []
+    entries_do = []
+    entries_dont = []
+    
     for dodont in dodonts:
         entry, created = DailyEntry.objects.get_or_create(
             dodont=dodont,
             date=date,
             defaults={'completed': False}
         )
-        entries_data.append({
+        item_data = {
             'entry': entry,
             'dodont': dodont,
             'streak': dodont.get_current_streak(),
-        })
+        }
+        entries_data.append(item_data)
+        
+        if dodont.item_type == 'do':
+            entries_do.append(item_data)
+        else:
+            entries_dont.append(item_data)
     
     # Calculate percentage
     total = len(entries_data)
@@ -96,6 +105,8 @@ def daily_journal(request, date_str=None):
     context = {
         'date': date,
         'entries_data': entries_data,
+        'entries_do': entries_do,
+        'entries_dont': entries_dont,
         'percentage': round(percentage, 1),
         'completed': completed,
         'total': total,

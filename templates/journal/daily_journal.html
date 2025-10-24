@@ -61,31 +61,28 @@
         things to do
     </h2>
     <div class="space-y-3">
-        {% for item in entries_data %}
-            {% if item.dodont.item_type == 'do' %}
-            <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                <input type="checkbox" 
-                       class="checkbox-custom w-6 h-6 text-green-600 rounded focus:ring-green-500 cursor-pointer"
-                       data-entry-id="{{ item.entry.id }}"
-                       {% if item.entry.completed %}checked{% endif %}
-                       onchange="toggleEntry(this)">
-                <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
-                    {{ item.dodont.text }}
-                </label>
-                <div class="flex items-center space-x-2">
-                    {% if item.streak > 0 %}
-                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center"
-                          data-streak-id="{{ item.entry.id }}">
-                        🔥 {{ item.streak }} day{{ item.streak|pluralize }}
-                    </span>
-                    {% endif %}
-                </div>
+        {% for item in entries_do %}
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+            <input type="checkbox" 
+                   class="checkbox-custom w-6 h-6 text-green-600 rounded focus:ring-green-500 cursor-pointer"
+                   data-entry-id="{{ item.entry.id }}"
+                   {% if item.entry.completed %}checked{% endif %}
+                   onchange="toggleEntry(this)">
+            <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
+                {{ item.dodont.text }}
+            </label>
+            <div class="flex items-center space-x-2">
+                {% if item.streak > 0 %}
+                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center"
+                      data-streak-id="{{ item.entry.id }}">
+                    🔥 {{ item.streak }} day{{ item.streak|pluralize }}
+                </span>
+                {% endif %}
             </div>
-            {% endif %}
-        {% endfor %}
-        {% if not entries_data or not entries_data|selectattr:"dodont.item_type"|selectattr:"dodont.item_type", "equalto", "do" %}
+        </div>
+        {% empty %}
         <p class="text-gray-500 text-center py-4 lowercase">no "do" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-green-600 hover:underline">add some!</a></p>
-        {% endif %}
+        {% endfor %}
     </div>
 </div>
 
@@ -98,31 +95,28 @@
         things to avoid
     </h2>
     <div class="space-y-3">
-        {% for item in entries_data %}
-            {% if item.dodont.item_type == 'dont' %}
-            <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                <input type="checkbox" 
-                       class="checkbox-custom w-6 h-6 text-red-600 rounded focus:ring-red-500 cursor-pointer"
-                       data-entry-id="{{ item.entry.id }}"
-                       {% if item.entry.completed %}checked{% endif %}
-                       onchange="toggleEntry(this)">
-                <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
-                    {{ item.dodont.text }}
-                </label>
-                <div class="flex items-center space-x-2">
-                    {% if item.streak > 0 %}
-                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center"
-                          data-streak-id="{{ item.entry.id }}">
-                        🔥 {{ item.streak }} day{{ item.streak|pluralize }}
-                    </span>
-                    {% endif %}
-                </div>
+        {% for item in entries_dont %}
+        <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+            <input type="checkbox" 
+                   class="checkbox-custom w-6 h-6 text-red-600 rounded focus:ring-red-500 cursor-pointer"
+                   data-entry-id="{{ item.entry.id }}"
+                   {% if item.entry.completed %}checked{% endif %}
+                   onchange="toggleEntry(this)">
+            <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
+                {{ item.dodont.text }}
+            </label>
+            <div class="flex items-center space-x-2">
+                {% if item.streak > 0 %}
+                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center"
+                      data-streak-id="{{ item.entry.id }}">
+                    🔥 {{ item.streak }} day{{ item.streak|pluralize }}
+                </span>
+                {% endif %}
             </div>
-            {% endif %}
-        {% endfor %}
-        {% if not entries_data or not entries_data|selectattr:"dodont.item_type"|selectattr:"dodont.item_type", "equalto", "dont" %}
+        </div>
+        {% empty %}
         <p class="text-gray-500 text-center py-4 lowercase">no "don't" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-green-600 hover:underline">add some!</a></p>
-        {% endif %}
+        {% endfor %}
     </div>
 </div>
 
