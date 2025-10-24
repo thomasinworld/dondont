@@ -10,9 +10,9 @@ import json
 
 def dashboard(request):
     """Display the main dashboard with calendar view of all journal days."""
-    # Get date range for the last year
+    # Get date range from Jan 1, 2025 to today
     today = timezone.now().date()
-    start_date = today - timedelta(days=364)  # 365 days including today
+    start_date = datetime(2025, 1, 1).date()
     
     # Get all dates with entries
     dates_with_entries = DailyEntry.objects.filter(

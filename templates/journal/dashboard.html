@@ -56,7 +56,7 @@
 {% block content %}
 <!-- GitHub-Style Contribution Graph -->
 <div class="bg-white rounded-lg shadow-md p-8">
-    <h2 class="text-xl font-semibold text-gray-800 mb-6 lowercase">activity heatmap</h2>
+    <h2 class="text-xl font-semibold text-gray-800 mb-2 lowercase">2025</h2>
     
     <div id="contribution-graph-container">
         <div id="contribution-graph">
@@ -85,13 +85,15 @@ function generateContributionGraph() {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Reset to start of day
     
-    // Go back approximately 52 weeks
-    const startDate = new Date(today);
-    startDate.setDate(startDate.getDate() - 364);
+    // Start from January 1, 2025
+    const startDate = new Date('2025-01-01');
+    startDate.setHours(0, 0, 0, 0);
     
-    // Adjust to start on Sunday
+    // Adjust to start on the Sunday before or on Jan 1
     const dayOfWeek = startDate.getDay(); // 0 = Sunday
-    startDate.setDate(startDate.getDate() - dayOfWeek);
+    if (dayOfWeek !== 0) {
+        startDate.setDate(startDate.getDate() - dayOfWeek);
+    }
     
     // Create data map
     const dataMap = {};
