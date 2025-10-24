@@ -135,9 +135,14 @@ function addDoDont(itemType) {
     const input = document.getElementById(inputId);
     const text = input.value.trim();
     
-    if (!text) return;
+    if (!text) {
+        console.log('No text entered');
+        return;
+    }
     
+    console.log('Adding item:', text, 'Type:', itemType);
     const csrftoken = getCookie('csrftoken');
+    console.log('CSRF Token:', csrftoken);
     
     fetch("{% url 'journal:add_dodont' %}", {
         method: 'POST',
@@ -147,8 +152,15 @@ function addDoDont(itemType) {
         },
         body: JSON.stringify({ text: text, item_type: itemType })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.success) {
             // Clear input
             input.value = '';
@@ -163,12 +175,15 @@ function addDoDont(itemType) {
                 emptyMessage.remove();
             }
             
+            // Escape HTML to prevent XSS
+            const escapedText = data.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
             // Create new item element
             const newItem = document.createElement('div');
             newItem.className = 'flex items-center p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition';
             newItem.setAttribute('data-dodont-id', data.id);
             newItem.innerHTML = `
-                <span class="flex-1 text-gray-800" id="text-${data.id}">${data.text}</span>
+                <span class="flex-1 text-gray-800" id="text-${data.id}">${escapedText}</span>
                 <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onclick="editDoDont(${data.id})"
                             class="text-blue-600 hover:text-blue-800 p-1">
@@ -185,11 +200,15 @@ function addDoDont(itemType) {
                 </div>
             `;
             list.appendChild(newItem);
+            console.log('Item added successfully');
+        } else {
+            console.error('Server returned success: false', data);
+            alert('Failed to add item: ' + (data.error || 'Unknown error'));
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Failed to add item. Please try again.');
+        alert('Failed to add item. Please check the console for details.');
     });
 }
 
