@@ -10,7 +10,7 @@
             <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
             </svg>
-            things to do
+            to do
         </h2>
         
         <!-- Add New Do Form -->
@@ -31,8 +31,16 @@
         <!-- List of Do's -->
         <div id="do-list" class="space-y-2">
             {% for dodont in dodonts_do %}
-            <div class="flex items-center p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition"
-                 data-dodont-id="{{ dodont.id }}">
+            <div class="flex items-center p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition cursor-move"
+                 data-dodont-id="{{ dodont.id }}"
+                 draggable="true"
+                 ondragstart="handleDragStart(event)"
+                 ondragover="handleDragOver(event)"
+                 ondrop="handleDrop(event)"
+                 ondragend="handleDragEnd(event)">
+                <svg class="w-5 h-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                </svg>
                 <span class="flex-1 text-gray-800" id="text-{{ dodont.id }}">{{ dodont.text }}</span>
                 <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onclick="editDoDont({{ dodont.id }})"
@@ -62,7 +70,7 @@
             <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
             </svg>
-            things to avoid
+            to don't
         </h2>
         
         <!-- Add New Don't Form -->
@@ -83,8 +91,16 @@
         <!-- List of Don'ts -->
         <div id="dont-list" class="space-y-2">
             {% for dodont in dodonts_dont %}
-            <div class="flex items-center p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition"
-                 data-dodont-id="{{ dodont.id }}">
+            <div class="flex items-center p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition cursor-move"
+                 data-dodont-id="{{ dodont.id }}"
+                 draggable="true"
+                 ondragstart="handleDragStart(event)"
+                 ondragover="handleDragOver(event)"
+                 ondrop="handleDrop(event)"
+                 ondragend="handleDragEnd(event)">
+                <svg class="w-5 h-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                </svg>
                 <span class="flex-1 text-gray-800" id="text-{{ dodont.id }}">{{ dodont.text }}</span>
                 <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onclick="editDoDont({{ dodont.id }})"
@@ -168,9 +184,17 @@ function addDoDont(itemType) {
             
             // Create new item element
             const newItem = document.createElement('div');
-            newItem.className = 'flex items-center p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition';
+            newItem.className = 'flex items-center p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition cursor-move';
             newItem.setAttribute('data-dodont-id', data.id);
+            newItem.setAttribute('draggable', 'true');
+            newItem.setAttribute('ondragstart', 'handleDragStart(event)');
+            newItem.setAttribute('ondragover', 'handleDragOver(event)');
+            newItem.setAttribute('ondrop', 'handleDrop(event)');
+            newItem.setAttribute('ondragend', 'handleDragEnd(event)');
             newItem.innerHTML = `
+                <svg class="w-5 h-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                </svg>
                 <span class="flex-1 text-gray-800" id="text-${data.id}">${escapedText}</span>
                 <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onclick="editDoDont(${data.id})"
@@ -194,6 +218,76 @@ function addDoDont(itemType) {
     })
     .catch(error => {
         alert('Failed to add item. Please try again.');
+    });
+}
+
+// Drag and drop functionality
+let draggedElement = null;
+
+function handleDragStart(e) {
+    draggedElement = e.currentTarget;
+    e.currentTarget.style.opacity = '0.4';
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    
+    const target = e.currentTarget;
+    if (draggedElement !== target && draggedElement.parentNode === target.parentNode) {
+        const rect = target.getBoundingClientRect();
+        const midpoint = rect.top + rect.height / 2;
+        
+        if (e.clientY < midpoint) {
+            target.parentNode.insertBefore(draggedElement, target);
+        } else {
+            target.parentNode.insertBefore(draggedElement, target.nextSibling);
+        }
+    }
+    
+    return false;
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    return false;
+}
+
+function handleDragEnd(e) {
+    e.currentTarget.style.opacity = '1';
+    
+    // Save the new order
+    const list = draggedElement.parentNode;
+    const items = Array.from(list.children).filter(el => el.dataset.dodontId);
+    const orderedIds = items.map(el => parseInt(el.dataset.dodontId));
+    
+    saveOrder(orderedIds);
+}
+
+function saveOrder(orderedIds) {
+    const csrftoken = getCookie('csrftoken');
+    
+    fetch("{% url 'journal:reorder_dodonts' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ ordered_ids: orderedIds })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            alert('Failed to save order');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving order:', error);
     });
 }
 

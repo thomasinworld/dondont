@@ -217,3 +217,22 @@ def update_dodont(request, dodont_id):
     except DoDont.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Item not found'}, status=404)
 
+
+@require_POST
+def reorder_dodonts(request):
+    """Reorder do/don't items."""
+    try:
+        data = json.loads(request.body)
+        ordered_ids = data.get('ordered_ids', [])
+        
+        if not ordered_ids:
+            return JsonResponse({'success': False, 'error': 'No IDs provided'}, status=400)
+        
+        # Update the order for each item
+        for index, dodont_id in enumerate(ordered_ids):
+            DoDont.objects.filter(id=dodont_id).update(order=index)
+        
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+

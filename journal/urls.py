@@ -12,5 +12,6 @@ urlpatterns = [
     path('api/add-dodont/', views.add_dodont, name='add_dodont'),
     path('api/delete-dodont/<int:dodont_id>/', views.delete_dodont, name='delete_dodont'),
     path('api/update-dodont/<int:dodont_id>/', views.update_dodont, name='update_dodont'),
+    path('api/reorder-dodonts/', views.reorder_dodonts, name='reorder_dodonts'),
 ]
 
