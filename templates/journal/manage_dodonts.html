@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Manage Habits - DonDont{% endblock %}
+{% block title %}manage habits - dondont{% endblock %}
 
 {% block content %}
 <div class="mb-8">
-    <h1 class="text-4xl font-bold text-gray-900 mb-2">Manage Your Habits</h1>
-    <p class="text-gray-600">Add, edit, or remove your daily dos and don'ts</p>
+    <h1 class="text-4xl font-bold text-gray-900 mb-2 lowercase">manage your habits</h1>
+    <p class="text-gray-600 lowercase">add, edit, or remove your daily dos and don'ts</p>
 </div>
 
 <div class="grid md:grid-cols-2 gap-8">
     <!-- Do's Section -->
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold text-green-600 mb-4 flex items-center">
+        <h2 class="text-2xl font-bold text-green-600 mb-4 flex items-center lowercase">
             <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
             </svg>
-            Things to Do
+            things to do
         </h2>
         
         <!-- Add New Do Form -->
@@ -23,12 +23,12 @@
             <div class="flex space-x-2">
                 <input type="text" 
                        id="new-do-input"
-                       placeholder="Add a new 'Do' item..."
-                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                       placeholder="add a new 'do' item..."
+                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent lowercase"
                        onkeypress="if(event.key === 'Enter') addDoDont('do')">
                 <button onclick="addDoDont('do')"
-                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition">
-                    Add
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition lowercase">
+                    add
                 </button>
             </div>
         </div>
@@ -56,18 +56,18 @@
             </div>
             {% endfor %}
             {% if not dodonts_do %}
-            <p class="text-gray-500 text-center py-8">No "Do" items yet. Add your first one above!</p>
+            <p class="text-gray-500 text-center py-8 lowercase">no "do" items yet. add your first one above!</p>
             {% endif %}
         </div>
     </div>
 
     <!-- Don'ts Section -->
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center">
+        <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center lowercase">
             <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
             </svg>
-            Things to Avoid
+            things to avoid
         </h2>
         
         <!-- Add New Don't Form -->
@@ -75,12 +75,12 @@
             <div class="flex space-x-2">
                 <input type="text" 
                        id="new-dont-input"
-                       placeholder="Add a new 'Don't' item..."
-                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                       placeholder="add a new 'don't' item..."
+                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent lowercase"
                        onkeypress="if(event.key === 'Enter') addDoDont('dont')">
                 <button onclick="addDoDont('dont')"
-                        class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition">
-                    Add
+                        class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition lowercase">
+                    add
                 </button>
             </div>
         </div>
@@ -108,7 +108,7 @@
             </div>
             {% endfor %}
             {% if not dodonts_dont %}
-            <p class="text-gray-500 text-center py-8">No "Don't" items yet. Add your first one above!</p>
+            <p class="text-gray-500 text-center py-8 lowercase">no "don't" items yet. add your first one above!</p>
             {% endif %}
         </div>
     </div>

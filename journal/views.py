@@ -10,9 +10,9 @@ import json
 
 def dashboard(request):
     """Display the main dashboard with calendar view of all journal days."""
-    # Get date range for the last 90 days
+    # Get date range for the last year
     today = timezone.now().date()
-    start_date = today - timedelta(days=89)  # 90 days including today
+    start_date = today - timedelta(days=364)  # 365 days including today
     
     # Get all dates with entries
     dates_with_entries = DailyEntry.objects.filter(
@@ -37,8 +37,20 @@ def dashboard(request):
         })
         current_date += timedelta(days=1)
     
+    # Convert calendar_data to JSON-serializable format
+    import json
+    calendar_data_json = json.dumps([
+        {
+            'date': str(item['date']),
+            'percentage': float(item['percentage']),
+            'total': item['total'],
+            'completed': item['completed'],
+        }
+        for item in calendar_data
+    ])
+    
     context = {
-        'calendar_data': calendar_data,
+        'calendar_data': calendar_data_json,
         'today': today,
     }
     return render(request, 'journal/dashboard.html', context)

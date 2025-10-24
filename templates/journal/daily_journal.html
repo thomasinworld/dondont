@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}Journal for {{ date|date:"F j, Y" }} - DonDont{% endblock %}
+{% block title %}journal for {{ date|date:"F j, Y" }} - dondont{% endblock %}
 
 {% block content %}
 <!-- Header with Date Navigation -->
 <div class="bg-white rounded-lg shadow-md p-6 mb-8">
     <div class="flex items-center justify-between mb-4">
         <a href="{% url 'journal:daily_journal' prev_date|date:'Y-m-d' %}" 
-           class="text-purple-600 hover:text-purple-800 font-medium flex items-center">
+           class="text-green-600 hover:text-green-800 font-medium flex items-center lowercase">
             <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
             </svg>
-            Previous Day
+            previous day
         </a>
         
-        <h1 class="text-3xl font-bold text-gray-900">
+        <h1 class="text-3xl font-bold text-gray-900 lowercase">
             {{ date|date:"F j, Y" }}
             {% if is_today %}
-            <span class="text-green-600 text-lg ml-2">(Today)</span>
+            <span class="text-green-600 text-lg ml-2">(today)</span>
             {% endif %}
         </h1>
         
         {% if not is_today %}
         <a href="{% url 'journal:daily_journal' next_date|date:'Y-m-d' %}" 
-           class="text-purple-600 hover:text-purple-800 font-medium flex items-center">
-            Next Day
+           class="text-green-600 hover:text-green-800 font-medium flex items-center lowercase">
+            next day
             <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
             </svg>
@@ -37,8 +37,8 @@
     <!-- Progress Bar -->
     <div class="mt-4">
         <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-medium text-gray-700">Daily Progress</span>
-            <span class="text-2xl font-bold text-purple-600" id="percentage">{{ percentage }}%</span>
+            <span class="text-sm font-medium text-gray-700 lowercase">daily progress</span>
+            <span class="text-2xl font-bold text-green-600" id="percentage">{{ percentage }}%</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
             <div class="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-500"
@@ -46,7 +46,7 @@
                  style="width: {{ percentage }}%">
             </div>
         </div>
-        <p class="text-sm text-gray-600 mt-2 text-center">
+        <p class="text-sm text-gray-600 mt-2 text-center lowercase">
             <span id="completed-count">{{ completed }}</span> of <span id="total-count">{{ total }}</span> completed
         </p>
     </div>
@@ -54,11 +54,11 @@
 
 <!-- Do's Section -->
 <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-    <h2 class="text-2xl font-bold text-green-600 mb-4 flex items-center">
+    <h2 class="text-2xl font-bold text-green-600 mb-4 flex items-center lowercase">
         <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
-        Things to Do
+        things to do
     </h2>
     <div class="space-y-3">
         {% for item in entries_data %}
@@ -84,18 +84,18 @@
             {% endif %}
         {% endfor %}
         {% if not entries_data or not entries_data|selectattr:"dodont.item_type"|selectattr:"dodont.item_type", "equalto", "do" %}
-        <p class="text-gray-500 text-center py-4">No "Do" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-purple-600 hover:underline">Add some!</a></p>
+        <p class="text-gray-500 text-center py-4 lowercase">no "do" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-green-600 hover:underline">add some!</a></p>
         {% endif %}
     </div>
 </div>
 
 <!-- Don'ts Section -->
 <div class="bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center">
+    <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center lowercase">
         <svg class="w-7 h-7 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
         </svg>
-        Things to Avoid
+        things to avoid
     </h2>
     <div class="space-y-3">
         {% for item in entries_data %}
@@ -121,7 +121,7 @@
             {% endif %}
         {% endfor %}
         {% if not entries_data or not entries_data|selectattr:"dodont.item_type"|selectattr:"dodont.item_type", "equalto", "dont" %}
-        <p class="text-gray-500 text-center py-4">No "Don't" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-purple-600 hover:underline">Add some!</a></p>
+        <p class="text-gray-500 text-center py-4 lowercase">no "don't" items yet. <a href="{% url 'journal:manage_dodonts' %}" class="text-green-600 hover:underline">add some!</a></p>
         {% endif %}
     </div>
 </div>
