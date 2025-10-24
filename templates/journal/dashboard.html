@@ -146,20 +146,24 @@ function generateContributionGraph() {
     
     // Month labels - show month name at the start of each month
     html += '<div class="month-labels">';
-    let lastMonth = -1;
+    let displayedMonths = new Set();
+    
     weeks.forEach((week, weekIndex) => {
-        // Check if any day in this week is the 1st of a month
-        const firstOfMonth = week.find(day => day.date.getDate() === 1);
+        if (week.length === 0) {
+            html += `<div class="month-label" style="width: 23px;"></div>`;
+            return;
+        }
         
-        if (firstOfMonth) {
-            const monthName = firstOfMonth.date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
-            html += `<div class="month-label">${monthName}</div>`;
-            lastMonth = firstOfMonth.date.getMonth();
-        } else if (weekIndex === 0 && week[0].date.getDate() <= 7) {
-            // First week - show the month name
+        // Get the month of the week (use the first day or majority)
+        const weekMonth = week[0].date.getMonth();
+        const weekYear = week[0].date.getFullYear();
+        const monthKey = `${weekYear}-${weekMonth}`;
+        
+        // Show label if this is the first week we're showing this month
+        if (!displayedMonths.has(monthKey)) {
             const monthName = week[0].date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
             html += `<div class="month-label">${monthName}</div>`;
-            lastMonth = week[0].date.getMonth();
+            displayedMonths.add(monthKey);
         } else {
             // Empty placeholder
             html += `<div class="month-label" style="width: 23px;"></div>`;
