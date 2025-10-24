@@ -108,6 +108,10 @@ function generateContributionGraph() {
     while (currentDate <= today) {
         const week = [];
         for (let i = 0; i < 7; i++) {
+            if (currentDate > today) {
+                // Don't add cells beyond today
+                break;
+            }
             const dateStr = currentDate.toISOString().split('T')[0];
             const dayData = dataMap[dateStr] || { date: dateStr, total: 0, completed: 0, percentage: 0 };
             
@@ -119,7 +123,9 @@ function generateContributionGraph() {
             });
             currentDate.setDate(currentDate.getDate() + 1);
         }
-        weeks.push(week);
+        if (week.length > 0) {
+            weeks.push(week);
+        }
     }
     
     // Build HTML
@@ -165,12 +171,28 @@ function generateContributionGraph() {
     html += '<div class="contribution-graph">';
     weeks.forEach(week => {
         html += '<div class="contribution-column">';
+        // Fill empty cells at the start if week doesn't start on Sunday
+        if (week.length > 0) {
+            const firstDayOfWeek = week[0].dayOfWeek;
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                if (week === weeks[0]) {
+                    html += '<div class="contribution-cell" style="background-color: transparent; border: none;"></div>';
+                }
+            }
+        }
         week.forEach(day => {
             const color = getContributionColor(day.data.percentage, day.data.total);
             const dateFormatted = day.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             const tooltip = `${day.data.completed}/${day.data.total} on ${dateFormatted}`;
             html += `<a href="/journal/${day.dateStr}/" class="contribution-cell" style="background-color: ${color};" title="${tooltip}"></a>`;
         });
+        // Fill empty cells at the end if week doesn't end on Saturday
+        if (week.length > 0 && week === weeks[weeks.length - 1]) {
+            const lastDayOfWeek = week[week.length - 1].dayOfWeek;
+            for (let i = lastDayOfWeek; i < 6; i++) {
+                html += '<div class="contribution-cell" style="background-color: transparent; border: none;"></div>';
+            }
+        }
         html += '</div>';
     });
     html += '</div>';
