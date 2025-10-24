@@ -48,10 +48,10 @@
                         dashboard
                     </a>
                     <a href="{% url 'journal:daily_journal_today' %}" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium transition lowercase">
-                        today
+                        journal
                     </a>
                     <a href="{% url 'journal:manage_dodonts' %}" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium transition lowercase">
-                        manage
+                        habits
                     </a>
                 </div>
             </div>
@@ -62,15 +62,6 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {% block content %}{% endblock %}
     </main>
-
-    <!-- Footer -->
-    <footer class="mt-12 bg-white border-t border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <p class="text-center text-gray-500 text-sm lowercase">
-                dondont - track your daily habits with style 🎯
-            </p>
-        </div>
-    </footer>
 
     {% block extra_scripts %}{% endblock %}
 </body>
