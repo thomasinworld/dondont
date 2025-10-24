@@ -83,12 +83,15 @@ const calendarData = {{ calendar_data|safe }};
 function generateContributionGraph() {
     const graphContainer = document.getElementById('contribution-graph');
     const today = new Date();
-    const oneYearAgo = new Date(today);
-    oneYearAgo.setFullYear(today.getFullYear() - 1);
+    today.setHours(0, 0, 0, 0); // Reset to start of day
     
-    // Start from the Sunday before one year ago
-    const startDate = new Date(oneYearAgo);
-    startDate.setDate(startDate.getDate() - startDate.getDay());
+    // Go back approximately 52 weeks
+    const startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - 364);
+    
+    // Adjust to start on Sunday
+    const dayOfWeek = startDate.getDay(); // 0 = Sunday
+    startDate.setDate(startDate.getDate() - dayOfWeek);
     
     // Create data map
     const dataMap = {};
@@ -96,7 +99,7 @@ function generateContributionGraph() {
         dataMap[day.date] = day;
     });
     
-    // Generate weeks
+    // Generate weeks - each week is a column
     const weeks = [];
     let currentDate = new Date(startDate);
     
@@ -105,10 +108,12 @@ function generateContributionGraph() {
         for (let i = 0; i < 7; i++) {
             const dateStr = currentDate.toISOString().split('T')[0];
             const dayData = dataMap[dateStr] || { date: dateStr, total: 0, completed: 0, percentage: 0 };
+            
             week.push({
                 date: new Date(currentDate),
                 dateStr: dateStr,
-                data: dayData
+                data: dayData,
+                dayOfWeek: currentDate.getDay()
             });
             currentDate.setDate(currentDate.getDate() + 1);
         }
@@ -118,31 +123,33 @@ function generateContributionGraph() {
     // Build HTML
     let html = '<div style="display: flex;">';
     
-    // Day labels
+    // Day labels (Sun = 0, Mon = 1, ..., Sat = 6)
     html += '<div class="day-labels">';
+    html += '<div class="day-label" style="visibility: hidden;">sun</div>';
     html += '<div class="day-label">mon</div>';
     html += '<div class="day-label" style="visibility: hidden;">tue</div>';
     html += '<div class="day-label">wed</div>';
     html += '<div class="day-label" style="visibility: hidden;">thu</div>';
     html += '<div class="day-label">fri</div>';
     html += '<div class="day-label" style="visibility: hidden;">sat</div>';
-    html += '<div class="day-label" style="visibility: hidden;">sun</div>';
     html += '</div>';
     
     html += '<div>';
     
-    // Month labels
+    // Month labels - show month name when it changes
     html += '<div class="month-labels">';
-    let currentMonth = '';
-    let monthPosition = 0;
+    let lastMonth = -1;
     weeks.forEach((week, weekIndex) => {
-        const firstDay = week[0].date;
-        const monthName = firstDay.toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
-        if (monthName !== currentMonth && firstDay.getDate() <= 7) {
-            html += `<div class="month-label" style="width: ${(weekIndex - monthPosition) * 23}px;"></div>`;
+        // Check the first day that's in the week (could be Sunday)
+        const firstDayOfMonth = week.find(day => day.date.getDate() === 1);
+        const currentMonth = week[0].date.getMonth();
+        
+        if (firstDayOfMonth || (currentMonth !== lastMonth && weekIndex === 0)) {
+            const monthName = week[0].date.toLocaleDateString('en-US', { month: 'short' }).toLowerCase();
             html += `<div class="month-label">${monthName}</div>`;
-            currentMonth = monthName;
-            monthPosition = weekIndex;
+            lastMonth = currentMonth;
+        } else {
+            html += `<div class="month-label" style="width: 23px;"></div>`;
         }
     });
     html += '</div>';
