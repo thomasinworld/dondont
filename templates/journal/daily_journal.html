@@ -69,7 +69,7 @@
                    {% if item.entry.completed %}checked{% endif %}
                    onchange="toggleEntry(this)">
             <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
-                {{ item.dodont.text }}
+                {{ item.entry.get_display_text }}
             </label>
             <div class="flex items-center space-x-2">
                 {% if item.streak > 0 %}
@@ -103,7 +103,7 @@
                    {% if item.entry.completed %}checked{% endif %}
                    onchange="toggleEntry(this)">
             <label class="ml-4 flex-1 text-lg text-gray-800 cursor-pointer" onclick="this.previousElementSibling.click()">
-                {{ item.dodont.text }}
+                {{ item.entry.get_display_text }}
             </label>
             <div class="flex items-center space-x-2">
                 {% if item.streak > 0 %}

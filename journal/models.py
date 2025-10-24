@@ -51,6 +51,7 @@ class DailyEntry(models.Model):
     dodont = models.ForeignKey(DoDont, on_delete=models.CASCADE, related_name='entries')
     date = models.DateField()
     completed = models.BooleanField(default=False)
+    text_snapshot = models.CharField(max_length=200, blank=True)  # Stores the text at time of entry
     
     class Meta:
         ordering = ['-date', 'dodont__order']
@@ -59,5 +60,10 @@ class DailyEntry(models.Model):
     
     def __str__(self):
         status = "✓" if self.completed else "✗"
-        return f"{self.date} - {self.dodont.text} ({status})"
+        display_text = self.text_snapshot or self.dodont.text
+        return f"{self.date} - {display_text} ({status})"
+    
+    def get_display_text(self):
+        """Get the text to display - use snapshot if available, otherwise current text."""
+        return self.text_snapshot or self.dodont.text
 

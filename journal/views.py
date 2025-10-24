@@ -78,8 +78,13 @@ def daily_journal(request, date_str=None):
         entry, created = DailyEntry.objects.get_or_create(
             dodont=dodont,
             date=date,
-            defaults={'completed': False}
+            defaults={'completed': False, 'text_snapshot': dodont.text}
         )
+        # Update text_snapshot if it's empty (for existing entries)
+        if not entry.text_snapshot:
+            entry.text_snapshot = dodont.text
+            entry.save()
+        
         item_data = {
             'entry': entry,
             'dodont': dodont,
